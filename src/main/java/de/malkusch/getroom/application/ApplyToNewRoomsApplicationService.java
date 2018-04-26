@@ -1,0 +1,56 @@
+package de.malkusch.getroom.application;
+
+import java.io.IOException;
+import java.time.Instant;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.malkusch.getroom.model.City;
+import de.malkusch.getroom.model.CreationDate;
+import de.malkusch.getroom.model.Price;
+import de.malkusch.getroom.model.Room;
+import de.malkusch.getroom.model.RoomRepository;
+import de.malkusch.getroom.model.apply.ApplyService;
+import de.malkusch.getroom.model.apply.Letter;
+
+public final class ApplyToNewRoomsApplicationService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplyToNewRoomsApplicationService.class);
+
+    ApplyToNewRoomsApplicationService(RoomRepository rooms, ApplyService applyService, Price maxPrice, City city,
+            Letter letter) {
+
+        lastRoomCreatedAt = new CreationDate(Instant.now());
+        this.rooms = rooms;
+        this.maxPrice = maxPrice;
+        this.city = city;
+        this.applyService = applyService;
+        this.letter = letter;
+
+        LOGGER.info("max. price: {}, city: {}", maxPrice, city);
+    }
+
+    private final RoomRepository rooms;
+    private final ApplyService applyService;
+    private final Price maxPrice;
+    private final City city;
+    private volatile CreationDate lastRoomCreatedAt;
+
+    public void applyToNewRooms() throws IOException {
+        rooms.findNewRooms(city, maxPrice, lastRoomCreatedAt).forEach(this::apply);
+    }
+
+    private final Letter letter;
+
+    private void apply(Room room) {
+        try {
+            applyService.apply(room, letter);
+            lastRoomCreatedAt = room.createdAt();
+
+        } catch (IOException e) {
+            LOGGER.warn("Failed to apply for {}", room, e);
+        }
+    }
+
+}
