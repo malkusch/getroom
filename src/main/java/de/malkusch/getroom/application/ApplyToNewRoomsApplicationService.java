@@ -5,6 +5,7 @@ import java.time.Instant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import de.malkusch.getroom.model.City;
 import de.malkusch.getroom.model.CreationDate;
@@ -21,7 +22,7 @@ public final class ApplyToNewRoomsApplicationService {
     ApplyToNewRoomsApplicationService(RoomRepository rooms, ApplyService applyService, Price maxPrice, City city,
             Letter letter) {
 
-        lastRoomCreatedAt = new CreationDate(Instant.now());
+        lastRoomCreatedAt = new CreationDate(Instant.now().plusSeconds(60));
         this.rooms = rooms;
         this.maxPrice = maxPrice;
         this.city = city;
@@ -37,7 +38,9 @@ public final class ApplyToNewRoomsApplicationService {
     private final City city;
     private volatile CreationDate lastRoomCreatedAt;
 
+    @Scheduled(fixedDelayString = "${scrapeDelay}")
     public void applyToNewRooms() throws IOException {
+        LOGGER.debug("Checking for new rooms");
         rooms.findNewRooms(city, maxPrice, lastRoomCreatedAt).forEach(this::apply);
     }
 
@@ -45,6 +48,7 @@ public final class ApplyToNewRoomsApplicationService {
 
     private void apply(Room room) {
         try {
+            LOGGER.info("Applying for room {}", room);
             applyService.apply(room, letter);
             lastRoomCreatedAt = room.createdAt();
 
