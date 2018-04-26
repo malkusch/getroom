@@ -23,7 +23,7 @@ import de.malkusch.getroom.model.RoomId;
 import de.malkusch.getroom.model.RoomRepository;
 
 @Service
-final class ScrapingRoomRepository implements RoomRepository {
+class ScrapingRoomRepository implements RoomRepository {
 
     private final UriTemplate searchUrl;
 

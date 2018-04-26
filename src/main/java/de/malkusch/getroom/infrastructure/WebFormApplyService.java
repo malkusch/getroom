@@ -9,7 +9,7 @@ import de.malkusch.getroom.model.apply.ApplyService;
 import de.malkusch.getroom.model.apply.Letter;
 
 @Service
-final class WebFormApplyService implements ApplyService {
+class WebFormApplyService implements ApplyService {
 
     @Override
     public void apply(Room room, Letter letter) throws IOException {
