@@ -30,18 +30,20 @@ class WebFormApplyService implements ApplyService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebFormApplyService.class);
 
     WebFormApplyService(@Value("${userAgent}") String userAgent, @Value("${applyUrl}") String applyUrl,
-            @Value("${successUrl}") UriTemplate successUrl) {
+            @Value("${successUrl}") UriTemplate successUrl, @Value("${receiveCopy}") boolean receiveCopy) {
 
         this.rest = new RestTemplate();
         this.userAgent = userAgent;
         this.applyUrl = applyUrl;
         this.successUrl = successUrl;
+        this.receiveCopy = receiveCopy;
     }
 
     private final RestTemplate rest;
     private final String userAgent;
     private final String applyUrl;
     private final UriTemplate successUrl;
+    private final boolean receiveCopy;
 
     @Override
     public void apply(Room room, Letter letter) throws IOException {
@@ -58,6 +60,9 @@ class WebFormApplyService implements ApplyService {
         map.add("telefon", letter.candidate().phone().toString());
         map.add("agb", "on");
         map.add("typ", "0");
+        if (receiveCopy) {
+            map.add("kopieanmich", "on");
+        }
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
         LOGGER.debug("Request: {}", request);
