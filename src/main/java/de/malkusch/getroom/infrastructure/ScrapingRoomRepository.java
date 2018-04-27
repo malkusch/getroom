@@ -1,6 +1,7 @@
 package de.malkusch.getroom.infrastructure;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -8,6 +9,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.map.LRUMap;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,18 +27,30 @@ import de.malkusch.getroom.model.RoomRepository;
 @Service
 class ScrapingRoomRepository implements RoomRepository {
 
-    private final UriTemplate searchUrl;
+    ScrapingRoomRepository(@Value("${searchUrl}") UriTemplate searchUrl, @Value("${userAgent}") String userAgent,
+            @Value("${timeout}") String timeout) {
 
-    ScrapingRoomRepository(@Value("${searchUrl}") UriTemplate searchUrl) {
         this.searchUrl = searchUrl;
+        this.userAgent = userAgent;
+        this.timeout = Duration.parse(timeout);
     }
 
     @Override
     public Stream<Room> findNewRooms(City city, Price maxPrice, CreationDate since) throws IOException {
         String url = searchUrl(city, maxPrice);
-        Document document = Jsoup.connect(url).get();
+        Document document = download(url);
         return document.select("*[id^=liste-details-ad-hidden-]").stream().map(this::toRoom)
                 .filter(r -> r.createdAt().isAfter(since));
+    }
+
+    private final String userAgent;
+    private final Duration timeout;
+
+    private Document download(String url) throws IOException {
+        Connection connection = Jsoup.connect(url);
+        connection.userAgent(userAgent);
+        connection.timeout((int) timeout.toMillis());
+        return connection.get();
     }
 
     private static final Pattern ID_PATTERN = Pattern.compile("\\Qliste-details-ad-hidden-\\E(\\d+)");
@@ -50,6 +64,8 @@ class ScrapingRoomRepository implements RoomRepository {
         RoomId id = new RoomId(idMatcher.group(1));
         return rooms.computeIfAbsent(id, Room::new);
     }
+
+    private final UriTemplate searchUrl;
 
     private String searchUrl(City city, Price maxPrice) {
         Map<String, Object> urlParameters = new HashMap<>();
