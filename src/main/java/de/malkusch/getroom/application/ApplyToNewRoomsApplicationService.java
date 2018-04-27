@@ -30,6 +30,7 @@ public final class ApplyToNewRoomsApplicationService {
         this.letter = letter;
 
         LOGGER.info("max. price: {}, city: {}", maxPrice, city);
+        LOGGER.info("letter: {}, ", letter);
     }
 
     private final RoomRepository rooms;
