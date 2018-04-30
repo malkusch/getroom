@@ -1,10 +1,13 @@
 package de.malkusch.getroom.application;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import de.malkusch.getroom.model.City;
+import de.malkusch.getroom.model.District;
 import de.malkusch.getroom.model.Price;
 import de.malkusch.getroom.model.RoomRepository;
 import de.malkusch.getroom.model.apply.ApplyService;
@@ -32,9 +35,15 @@ class ApplicationConfiguration {
 
     @Bean
     ApplyToNewRoomsApplicationService applyToNewRoomsApplicationService(RoomRepository rooms, ApplyService applyService,
-            @Value("${maxPrice}") int maxPrice, @Value("${city}") int city, Letter letter) {
+            @Value("${maxPrice}") int maxPrice, @Value("${city}") int city, @Value("${districts}") int[] districts,
+            Letter letter) {
 
-        return new ApplyToNewRoomsApplicationService(rooms, applyService, new Price(maxPrice), new City(city), letter);
+        return new ApplyToNewRoomsApplicationService(rooms, applyService, new Price(maxPrice), new City(city),
+                districts(districts), letter);
+    }
+
+    private static District[] districts(int[] districts) {
+        return Arrays.stream(districts).mapToObj(District::new).toArray(District[]::new);
     }
 
 }

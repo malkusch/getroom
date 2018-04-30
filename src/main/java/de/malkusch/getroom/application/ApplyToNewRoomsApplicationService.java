@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import de.malkusch.getroom.model.City;
 import de.malkusch.getroom.model.CreationDate;
+import de.malkusch.getroom.model.District;
 import de.malkusch.getroom.model.Price;
 import de.malkusch.getroom.model.Room;
 import de.malkusch.getroom.model.RoomRepository;
@@ -20,12 +21,13 @@ public final class ApplyToNewRoomsApplicationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplyToNewRoomsApplicationService.class);
 
     ApplyToNewRoomsApplicationService(RoomRepository rooms, ApplyService applyService, Price maxPrice, City city,
-            Letter letter) {
+            District[] disctricts, Letter letter) {
 
         lastRoomCreatedAt = new CreationDate(Instant.now().plusSeconds(60));
         this.rooms = rooms;
         this.maxPrice = maxPrice;
         this.city = city;
+        this.districts = disctricts;
         this.applyService = applyService;
         this.letter = letter;
 
@@ -37,12 +39,13 @@ public final class ApplyToNewRoomsApplicationService {
     private final ApplyService applyService;
     private final Price maxPrice;
     private final City city;
+    private final District[] districts;
     private volatile CreationDate lastRoomCreatedAt;
 
     @Scheduled(fixedDelayString = "${scrapeDelay}")
     public void applyToNewRooms() throws IOException {
         LOGGER.debug("Checking for new rooms");
-        rooms.findNewRooms(city, maxPrice, lastRoomCreatedAt).forEach(this::apply);
+        rooms.findNewRooms(city, districts, maxPrice, lastRoomCreatedAt).forEach(this::apply);
     }
 
     private final Letter letter;

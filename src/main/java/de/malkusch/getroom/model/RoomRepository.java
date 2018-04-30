@@ -8,6 +8,6 @@ import org.springframework.retry.annotation.Retryable;
 public interface RoomRepository {
 
     @Retryable(IOException.class)
-    Stream<Room> findNewRooms(City city, Price maxPrice, CreationDate since) throws IOException;
+    Stream<Room> findNewRooms(City city, District[] districts, Price maxPrice, CreationDate since) throws IOException;
 
 }
