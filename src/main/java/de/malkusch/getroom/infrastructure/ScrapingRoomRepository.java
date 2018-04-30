@@ -71,6 +71,7 @@ class ScrapingRoomRepository implements RoomRepository {
         connection.timeout((int) timeout.toMillis());
         connection.cookies(cookies);
 
+        LOGGER.debug("Downloading {} with Cookies: {}", url, cookies);
         Response response = connection.execute();
         cookies.putAll(response.cookies());
         return response;
@@ -96,9 +97,7 @@ class ScrapingRoomRepository implements RoomRepository {
         urlParameters.put("maxPrice", maxPrice);
         String districtParameters = Arrays.stream(districts).map(d -> "&ot%5B" + d + "%5D=" + d).reduce("",
                 (d1, d2) -> d1 + d2);
-        String expanded = searchUrl.expand(urlParameters) + districtParameters;
-        LOGGER.debug(expanded);
-        return expanded;
+        return searchUrl.expand(urlParameters) + districtParameters;
     }
 
 }

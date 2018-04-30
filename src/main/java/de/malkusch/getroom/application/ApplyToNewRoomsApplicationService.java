@@ -2,6 +2,7 @@ package de.malkusch.getroom.application;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ public final class ApplyToNewRoomsApplicationService {
         this.letter = letter;
 
         LOGGER.info("max. price: {}, city: {}", maxPrice, city);
+        LOGGER.info("districts: {}", Arrays.toString(disctricts));
         LOGGER.info("letter: {}, ", letter);
     }
 
