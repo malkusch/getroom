@@ -1,0 +1,26 @@
+letter:
+  gender: MALE
+  firstName: Markus
+  lastName: Malkusch
+  email: markus@malkusch.de
+  phone: +49 1777 430023
+  message: |
+    Hallo neuer Mitbewohner
+
+    Ich bin Markus, 37, gebürtiger Münchner und arbeite hier als Programmierer. Diese
+    WG wäre genau richtig für mich und ich denk ich wär auch ein sehr passender
+    Kandidat. Ich arbeite unter der Woche nur drei Tage in München und würde
+    meistens übers lange Wochenende zu meiner Familie pendeln. Ich rauche nicht, bin
+    recht unkompliziert, gesellig, rücksichtsvoll, und hab jahrzehntelange WG-Erfahrung.
+    Ich denk man kann gut mit mir gemütlich und zwanglos zusammenleben. Meine bisherigen
+    WG-Erfahrungen waren alle sehr positiv und ich habe wenig Zweifel dass es mit uns
+    genauso wird. Ich würd mich riesig freuen wenn ich zum Kennenlernen eingeladen werde.
+    Hier gibt's noch ein Bild von mir: http://markus.malkusch.de/
+
+    Liebe Grüße
+    Markus
+    +49 1777 430023
+maxPrice: 500
+city: 90
+districts: 2114, 2123, 2132, 2128, 2116, 2118, 2124, 2127, 2133, 2134
+receiveCopy: true
