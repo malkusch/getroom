@@ -18,6 +18,8 @@ Create the file application.yml and set the following properties:
 - `city`: The id of the city, e.g. "90" for Munich. Check wg-gesucht.de to find the id of your city.
 - `districts`: Comma sperated list of district ids. Check wg-gesucht.de to find the district ids.
 - `receiveCopy`: true, to receive a copy of your application (default is false)
+- `login.username`: Your wg-gesucht.de username
+- `login.password`: Your wg-gesucht.de password
 
 See also application.yml.dist as an example.
 

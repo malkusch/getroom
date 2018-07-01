@@ -29,18 +29,18 @@ class WebFormApplyService implements ApplyService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebFormApplyService.class);
 
-    WebFormApplyService(@Value("${userAgent}") String userAgent, @Value("${applyUrl}") String applyUrl,
-            @Value("${successUrl}") UriTemplate successUrl, @Value("${receiveCopy}") boolean receiveCopy) {
+    WebFormApplyService(@Value("${applyUrl}") String applyUrl, @Value("${successUrl}") UriTemplate successUrl,
+            @Value("${receiveCopy}") boolean receiveCopy, AuthenticationService authentication, RestTemplate rest) {
 
-        this.rest = new RestTemplate();
-        this.userAgent = userAgent;
+        this.rest = rest;
         this.applyUrl = applyUrl;
         this.successUrl = successUrl;
         this.receiveCopy = receiveCopy;
+        this.authentication = authentication;
     }
 
+    private final AuthenticationService authentication;
     private final RestTemplate rest;
-    private final String userAgent;
     private final String applyUrl;
     private final UriTemplate successUrl;
     private final boolean receiveCopy;
@@ -49,7 +49,7 @@ class WebFormApplyService implements ApplyService {
     public void apply(Room room, Letter letter) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set(HttpHeaders.USER_AGENT, userAgent);
+        headers.set(HttpHeaders.COOKIE, authentication.getAuthenticatedCookies().toString());
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("nachricht", letter.message());
