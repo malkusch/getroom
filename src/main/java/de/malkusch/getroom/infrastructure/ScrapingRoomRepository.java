@@ -9,7 +9,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import org.apache.commons.collections4.map.LRUMap;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -23,7 +22,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.UriTemplate;
 
 import de.malkusch.getroom.model.City;
-import de.malkusch.getroom.model.CreationDate;
 import de.malkusch.getroom.model.District;
 import de.malkusch.getroom.model.Price;
 import de.malkusch.getroom.model.Room;
@@ -36,22 +34,22 @@ class ScrapingRoomRepository implements RoomRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScrapingRoomRepository.class);
 
     ScrapingRoomRepository(@Value("${searchUrl}") UriTemplate searchUrl, @Value("${userAgent}") String userAgent,
-            @Value("${timeout}") String timeout) throws IOException {
+            @Value("${timeout}") String timeout, AuthenticationService authenticationService) throws IOException {
 
         this.searchUrl = searchUrl;
         this.userAgent = userAgent;
         this.timeout = Duration.parse(timeout);
+        this.authenticationService = authenticationService;
         initCookies();
     }
 
     @Override
-    public Stream<Room> findNewRooms(City city, District[] districts, Price maxPrice, CreationDate since)
-            throws IOException {
+    public Stream<Room> findNewRooms(City city, District[] districts, Price maxPrice) throws IOException {
         String url = searchUrl(city, districts, maxPrice);
         cookies.put("last_city", city.toString());
         Document document = download(url).parse();
-        return document.select("*[id^=liste-details-ad-hidden-]").stream().map(this::toRoom)
-                .filter(r -> r.createdAt().isAfter(since));
+        return document.select("*[id^=liste-details-ad-]:not([id^=liste-details-ad-hidden-])").stream()
+                .map(this::toRoom);
     }
 
     private void initCookies() throws IOException {
@@ -66,6 +64,7 @@ class ScrapingRoomRepository implements RoomRepository {
     private final Duration timeout;
 
     private Response download(String url) throws IOException {
+        authenticate();
         Connection connection = Jsoup.connect(url);
         connection.userAgent(userAgent);
         connection.timeout((int) timeout.toMillis());
@@ -77,16 +76,23 @@ class ScrapingRoomRepository implements RoomRepository {
         return response;
     }
 
-    private static final Pattern ID_PATTERN = Pattern.compile("\\Qliste-details-ad-hidden-\\E(\\d+)");
-    private final LRUMap<RoomId, Room> rooms = new LRUMap<>(1000);
+    private final AuthenticationService authenticationService;
+
+    private void authenticate() {
+        authenticationService.getAuthenticatedCookies().cookies().forEach(c -> cookies.put(c.getName(), c.getValue()));
+    }
+
+    private static final Pattern ID_PATTERN = Pattern.compile("\\Qliste-details-ad-\\E(\\d+)");
 
     private Room toRoom(Element element) {
+        final boolean contacted = !element.select(".ribbon-contacted").isEmpty();
+
         Matcher idMatcher = ID_PATTERN.matcher(element.attr("id"));
         if (!idMatcher.matches()) {
             throw new IllegalStateException("Could not extract id from " + element.attr("id"));
         }
         RoomId id = new RoomId(idMatcher.group(1));
-        return rooms.computeIfAbsent(id, Room::new);
+        return new Room(id, contacted);
     }
 
     private final UriTemplate searchUrl;

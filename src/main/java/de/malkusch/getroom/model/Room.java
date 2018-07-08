@@ -2,28 +2,23 @@ package de.malkusch.getroom.model;
 
 import static java.util.Objects.requireNonNull;
 
-import java.time.Instant;
-
 public final class Room {
 
     private final RoomId id;
-    private final CreationDate createdAt;
 
-    public Room(RoomId id) {
-        this(id, new CreationDate(Instant.now()));
-    }
-
-    public Room(RoomId id, CreationDate createdAt) {
+    public Room(RoomId id, boolean contacted) {
         this.id = requireNonNull(id);
-        this.createdAt = requireNonNull(createdAt);
+        this.applied = contacted;
     }
 
     public RoomId id() {
         return id;
     }
 
-    public CreationDate createdAt() {
-        return createdAt;
+    private final boolean applied;
+
+    public boolean isApplied() {
+        return applied;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package de.malkusch.getroom.application;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Arrays;
 
 import org.slf4j.Logger;
@@ -9,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import de.malkusch.getroom.model.City;
-import de.malkusch.getroom.model.CreationDate;
 import de.malkusch.getroom.model.District;
 import de.malkusch.getroom.model.Price;
 import de.malkusch.getroom.model.Room;
@@ -24,7 +22,6 @@ public final class ApplyToNewRoomsApplicationService {
     ApplyToNewRoomsApplicationService(RoomRepository rooms, ApplyService applyService, Price maxPrice, City city,
             District[] disctricts, Letter letter) {
 
-        lastRoomCreatedAt = new CreationDate(Instant.now().plusSeconds(60));
         this.rooms = rooms;
         this.maxPrice = maxPrice;
         this.city = city;
@@ -42,12 +39,11 @@ public final class ApplyToNewRoomsApplicationService {
     private final Price maxPrice;
     private final City city;
     private final District[] districts;
-    private volatile CreationDate lastRoomCreatedAt;
 
     @Scheduled(fixedDelayString = "${scrapeDelay}")
     public void applyToNewRooms() throws IOException {
         LOGGER.debug("Checking for new rooms");
-        rooms.findNewRooms(city, districts, maxPrice, lastRoomCreatedAt).forEach(this::apply);
+        rooms.findNewRooms(city, districts, maxPrice).filter(r -> !r.isApplied()).forEach(this::apply);
     }
 
     private final Letter letter;
@@ -56,7 +52,6 @@ public final class ApplyToNewRoomsApplicationService {
         try {
             LOGGER.info("Applying for room {}", room);
             applyService.apply(room, letter);
-            lastRoomCreatedAt = room.createdAt();
 
         } catch (IOException e) {
             LOGGER.warn("Failed to apply for {}", room, e);

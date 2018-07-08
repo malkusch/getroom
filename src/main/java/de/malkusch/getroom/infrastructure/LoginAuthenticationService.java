@@ -66,7 +66,7 @@ final class LoginAuthenticationService implements AuthenticationService {
             ResponseEntity<?> response = rest.postForEntity(api, new HttpEntity<>(login), null);
             cookies = new AuthenticationCookies(HttpCookie.parse(response.getHeaders().getFirst("Set-Cookie")));
 
-            // For some reasone this is necessary after a login
+            // For some reason this is necessary after a login
             HttpHeaders headers = new HttpHeaders();
             headers.set(HttpHeaders.COOKIE, cookies.toString());
             rest.exchange(home, HttpMethod.GET, new HttpEntity<>(headers), String.class);
