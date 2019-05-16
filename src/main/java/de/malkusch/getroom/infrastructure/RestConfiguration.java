@@ -16,8 +16,8 @@ class RestConfiguration {
     @Bean
     RestTemplate restTemplate(@Value("${timeout}") String timeout, RestTemplateBuilder builder) {
         Duration timeoutDuration = Duration.parse(timeout);
-        return builder.setConnectTimeout((int) timeoutDuration.toMillis()).additionalInterceptors(defaultUserAgent())
-                .setReadTimeout((int) timeoutDuration.toMillis()).build();
+        return builder.setConnectTimeout(timeoutDuration).additionalInterceptors(defaultUserAgent())
+                .setReadTimeout(timeoutDuration).build();
     }
 
     @Value("${userAgent}")
@@ -29,5 +29,4 @@ class RestConfiguration {
             return execution.execute(request, body);
         };
     }
-
 }
