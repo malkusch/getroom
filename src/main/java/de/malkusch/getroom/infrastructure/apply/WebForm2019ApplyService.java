@@ -1,4 +1,4 @@
-package de.malkusch.getroom.infrastructure;
+package de.malkusch.getroom.infrastructure.apply;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,25 +11,25 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
 
+import de.malkusch.getroom.infrastructure.AuthenticationService;
 import de.malkusch.getroom.model.Room;
 import de.malkusch.getroom.model.RoomId;
 import de.malkusch.getroom.model.apply.ApplyService;
 import de.malkusch.getroom.model.apply.Gender;
 import de.malkusch.getroom.model.apply.Letter;
 
-@Service
-class WebFormApplyService implements ApplyService {
+@Deprecated
+final class WebForm2019ApplyService implements ApplyService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebFormApplyService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebForm2019ApplyService.class);
 
-    WebFormApplyService(@Value("${applyUrl}") String applyUrl, @Value("${successUrl}") UriTemplate successUrl,
+    WebForm2019ApplyService(@Value("${applyUrl}") String applyUrl, @Value("${successUrl}") UriTemplate successUrl,
             @Value("${receiveCopy}") boolean receiveCopy, AuthenticationService authentication, RestTemplate rest) {
 
         this.rest = rest;

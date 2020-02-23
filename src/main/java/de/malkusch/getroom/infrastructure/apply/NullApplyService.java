@@ -1,9 +1,10 @@
-package de.malkusch.getroom.infrastructure;
+package de.malkusch.getroom.infrastructure.apply;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,10 @@ import de.malkusch.getroom.model.apply.Letter;
 @Primary
 class NullApplyService implements ApplyService {
 
-    private static final Logger LOOGER = LoggerFactory.getLogger(NullApplyService.class);
+    private static final Logger LOGGER = getLogger(NullApplyService.class);
 
     @Override
     public void apply(Room room, Letter letter) throws IOException {
-        LOOGER.info("Ignore application for {}", room);
+        LOGGER.info("Ignore application for {}", room);
     }
-
 }

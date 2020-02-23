@@ -20,6 +20,7 @@ Create the file application.yml and set the following properties:
 - `receiveCopy`: true, to receive a copy of your application (default is false)
 - `login.username`: Your wg-gesucht.de username
 - `login.password`: Your wg-gesucht.de password
+- `login.userId`: Your user id
 
 See also application.yml.dist as an example.
 

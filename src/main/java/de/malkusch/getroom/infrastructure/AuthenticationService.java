@@ -5,7 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.net.HttpCookie;
 import java.util.List;
 
-interface AuthenticationService {
+public interface AuthenticationService {
 
     AuthenticationCookies getAuthenticatedCookies();
 

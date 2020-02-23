@@ -50,14 +50,8 @@ final class LoginAuthenticationService implements AuthenticationService {
     private final String password;
     private final RestTemplate rest;
 
-    @SuppressWarnings("unused")
-    private static final class Login {
-        private String login_email_username;
-        private String login_password;
-    }
-
     private void authenticate() throws IOException {
-        Login login = new Login();
+        LoginDto login = new LoginDto();
         login.login_email_username = username;
         login.login_password = password;
 
@@ -76,4 +70,10 @@ final class LoginAuthenticationService implements AuthenticationService {
         }
     }
 
+    private static class LoginDto {
+        public String login_email_username;
+        public String login_password;
+        public final String login_form_auto_login = "1";
+        public final String display_language = "de";
+    }
 }
