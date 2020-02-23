@@ -1,9 +1,4 @@
 letter:
-  gender: MALE
-  firstName: Markus
-  lastName: Malkusch
-  email: markus@malkusch.de
-  phone: +49 1777 430023
   message: |
     Hallo neuer Mitbewohner
 
@@ -24,7 +19,6 @@ letter:
 maxPrice: 500
 city: 90
 districts: 2114, 2123, 2132, 2128, 2116, 2118, 2124, 2127, 2133, 2134
-receiveCopy: true
 login:
   username: markus@malkusch.de
   password: *******
