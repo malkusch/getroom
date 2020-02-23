@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import de.malkusch.getroom.infrastructure.AuthenticationService;
+import de.malkusch.getroom.infrastructure.UserIdService;
 import de.malkusch.getroom.model.Room;
 import de.malkusch.getroom.model.apply.ApplyService;
 import de.malkusch.getroom.model.apply.Letter;
@@ -20,11 +21,11 @@ import de.malkusch.getroom.model.apply.Letter;
 public class Api2020ApplyService implements ApplyService {
 
     Api2020ApplyService(@Value("${apply.start}") String start, @Value("${apply.submit}") String submit,
-            @Value("${login.userId}") String userId, AuthenticationService authentication, RestTemplate rest) {
+            UserIdService userIdService, AuthenticationService authentication, RestTemplate rest) {
 
         this.start = start;
         this.submit = submit;
-        this.userId = userId;
+        this.userId = userIdService.userId;
         this.authentication = authentication;
         this.rest = rest;
     }
@@ -41,7 +42,7 @@ public class Api2020ApplyService implements ApplyService {
         // headers.setContentType(MediaType.TEXT_HTML);
         headers.set("Accept", "text/plain, application/json, application/*+json, */*");
         headers.set(HttpHeaders.COOKIE, authentication.getAuthenticatedCookies().toString());
-        
+
         HttpEntity<String> startRequest = new HttpEntity<>(headers);
 
         ResponseEntity<String> startResponse = rest.exchange(start, HttpMethod.GET, startRequest, String.class,

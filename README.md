@@ -14,7 +14,6 @@ Create the file application.yml and set the following properties:
 - `districts`: Comma sperated list of district ids. Check wg-gesucht.de to find the district ids.
 - `login.username`: Your wg-gesucht.de username
 - `login.password`: Your wg-gesucht.de password
-- `login.userId`: Your user id
 
 See also application.yml.dist as an example.
 

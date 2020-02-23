@@ -22,4 +22,3 @@ districts: 2114, 2123, 2132, 2128, 2116, 2118, 2124, 2127, 2133, 2134
 login:
   username: markus@malkusch.de
   password: *******
-  userId: 1834175
