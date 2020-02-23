@@ -1,10 +1,8 @@
-package de.malkusch.getroom.model.apply;
+package de.malkusch.getroom.model;
 
 import java.io.IOException;
 
 import org.springframework.retry.annotation.Retryable;
-
-import de.malkusch.getroom.model.Room;
 
 public interface ApplyService {
 

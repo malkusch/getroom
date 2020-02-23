@@ -13,9 +13,9 @@ import org.springframework.web.client.RestTemplate;
 
 import de.malkusch.getroom.infrastructure.AuthenticationService;
 import de.malkusch.getroom.infrastructure.UserIdService;
+import de.malkusch.getroom.model.ApplyService;
+import de.malkusch.getroom.model.Letter;
 import de.malkusch.getroom.model.Room;
-import de.malkusch.getroom.model.apply.ApplyService;
-import de.malkusch.getroom.model.apply.Letter;
 
 @Service
 public class Api2020ApplyService implements ApplyService {

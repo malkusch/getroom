@@ -7,13 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import de.malkusch.getroom.model.ApplyService;
 import de.malkusch.getroom.model.City;
 import de.malkusch.getroom.model.District;
+import de.malkusch.getroom.model.Letter;
 import de.malkusch.getroom.model.Price;
 import de.malkusch.getroom.model.Room;
 import de.malkusch.getroom.model.RoomRepository;
-import de.malkusch.getroom.model.apply.ApplyService;
-import de.malkusch.getroom.model.apply.Letter;
 
 public final class ApplyToNewRoomsApplicationService {
 

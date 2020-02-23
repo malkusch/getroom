@@ -1,4 +1,4 @@
-package de.malkusch.getroom.model.apply;
+package de.malkusch.getroom.model;
 
 import static java.util.Objects.requireNonNull;
 
